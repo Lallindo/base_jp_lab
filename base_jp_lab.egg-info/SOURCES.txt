@@ -1,0 +1,13 @@
+setup.py
+base_jp_lab/__init__.py
+base_jp_lab.egg-info/PKG-INFO
+base_jp_lab.egg-info/SOURCES.txt
+base_jp_lab.egg-info/dependency_links.txt
+base_jp_lab.egg-info/requires.txt
+base_jp_lab.egg-info/top_level.txt
+base_jp_lab/Objects/AccessClass.py
+base_jp_lab/Objects/CallerClass.py
+base_jp_lab/Objects/ConnectionClass.py
+base_jp_lab/Objects/GetData.py
+base_jp_lab/Objects/ScraperClass.py
+base_jp_lab/Objects/__init__.py
