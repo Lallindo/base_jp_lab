@@ -10,6 +10,7 @@ Requires-Dist: selenium==4.24.0
 Requires-Dist: gspread==6.1.4
 Requires-Dist: oauth2client==4.1.3
 Requires-Dist: pandas==2.2.3
+Requires-Dist: mysql-connector==2.2.9
 Dynamic: author
 Dynamic: author-email
 Dynamic: license
