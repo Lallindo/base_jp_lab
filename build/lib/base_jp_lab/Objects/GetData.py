@@ -2,6 +2,8 @@ import requests
 from .AccessClass import Access 
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+import json
+from cryptography.fernet import Fernet
 
 def api_token_n8n(link_n8n:str, site_name:str, owner:str = '',) -> dict:
     """
@@ -83,3 +85,80 @@ def alter_sheet(sheet_name:str, creds_location:str, data:list, worksheet_id:int 
         worksheet_id (int): GID de uma página dentro da planilha. O GID pode ser encontrado no final da URL ao acessar a página. 
     """
     pass
+
+def encrypt_msg(message:str, key:str):
+    """
+    Encripta uma string usando Fernet.
+    
+    Args
+    ----------
+        message (str): String que será criptografada.
+        key (str): Chave de criptografia que será usada. 
+    """
+    fernet = Fernet(key)
+    return fernet.encrypt(message.encode()).decode()
+
+def decrypt_msg(message:str, site_name:str, keys_json_path:str = 'base_jp_lab/Configs/decrypt_keys.json', override_key:str = ''):
+    """
+    Decripta uma string usando Fernet.
+    
+    Args
+    ----------
+        message (str): String que será criptografada.
+        site_name (str): Nome do site de onde o valor criptografado vem. 
+        keys_json_path (str): Caminho até o arquivo JSON com as chaves de criptografia.
+        override_key (str): Utiliza uma nova chave e ignora a chave no arquivo JSON.
+    """
+    if override_key == '':
+        with open(keys_json_path, 'r') as f:
+            key = json.load(f)['keys'][f'{site_name}_key']
+    else:
+        key = override_key
+
+    fernet = Fernet(key)
+    return fernet.decrypt(message).decode()
+
+def set_api_keys(keys_json_path:str = 'base_jp_lab/Configs/decrypt_keys.json') -> None:
+    """
+    Configura as chaves de API e as adiciona, criptografadas, ao banco. 
+    
+    Args
+    ----------
+        keys_json_path (str): Caminho para o arquivo JSON com as chaves de criptografia.
+    """
+    key = Fernet.generate_key()
+    loja_id = input('Qual o site que você deseja cadastrar?\n0 - Tiny\n1 - PedidoOK\n2 - Mercado Livre\n3 - Magalu\n4 - Amazon\n5 - Shopee')
+    match loja_id:
+        case '0':
+            nome_loja = 'tiny'
+        case '1':
+            nome_loja = 'pedidook'
+        case '2':
+            nome_loja = 'mercadolivre'
+        case '3':
+            nome_loja = 'magalu'
+        case '4':
+            nome_loja = 'amazon'
+        case '5':
+            nome_loja = 'shopee' 
+        case default:
+            print('Número digitado não é válido!')
+    client_id = input('Digite seu client_id:')
+    client_secret = input('Digite seu client_secret:')
+    refresh_token = input('Digite seu refresh_token:')
+
+    enc_client_id = encrypt_msg(client_id, key)
+    enc_client_secret = encrypt_msg(client_secret, key)
+    enc_refresh_token = encrypt_msg(refresh_token, key)
+
+    with open(keys_json_path, 'r') as f:
+        keys = dict(json.load(f))
+
+    keys['keys'][f'{nome_loja}_key'] = key.decode()
+
+    with open(keys_json_path, 'w') as f:
+        json.dump(keys, f, indent=1)
+
+    a = Access('root', '', 'localhost', '3306', 'jp_bd')
+    data = [(enc_client_id, enc_client_secret, enc_refresh_token, int(loja_id) + 1)]
+    a.custom_i_u_query('UPDATE apis SET client_id_api = %s, client_secret_api = %s, refresh_token_api = %s WHERE id_api = %s', data)

@@ -1,4 +1,4 @@
-from .GetData import api_data, api_token_n8n, scraping_base_url, sheet_data, alter_sheet
+from .GetData import api_data, api_token_n8n, scraping_base_url, sheet_data, alter_sheet, set_api_keys, encrypt_msg, decrypt_msg
 from .ConnectionClass import Connection
 from .AccessClass import Access
 from .CallerClass import Caller

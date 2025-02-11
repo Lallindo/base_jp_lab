@@ -68,8 +68,4 @@ class Access():
         self.con.db.commit()
         self.con.close_con()
         print('Dados inseridos/alterados')
-        return
-    
-    
-    
-    
+        return 
