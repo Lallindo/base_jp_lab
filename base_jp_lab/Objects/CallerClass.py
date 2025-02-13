@@ -37,9 +37,9 @@ class Caller():
         
         api = api_data(access, site_name)
         self.std_url = api[1]
-        self.header = eval(api[2])['header']
-        self.param = eval(api[3])['params']
-        self.token_name = api[4]
+        self.header = eval(api[3])['header']
+        self.param = eval(api[5])['params']
+        self.token_name = api[7]
         
         self.session = requests.Session()
         self.session.headers = self.header
