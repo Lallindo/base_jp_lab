@@ -37,6 +37,7 @@ class Caller():
         
         api = api_data(access, site_name)
         self.std_url = api[1]
+        self.req_url = ''
         self.header = eval(api[3])['header']
         self.param = eval(api[5])['params']
         self.token_name = api[7]
@@ -63,7 +64,7 @@ class Caller():
         print(f'Headers: {self.header}')
         print(f'Parâmetros: {self.param}')
     
-    def makeCall(self, add_to_url:str = '', method:str = 'get', params_add:dict = {}, data_post:dict = {}, disable_std_params:bool = False) -> dict:
+    def make_call(self, add_to_url:str = '', method:str = 'get', params_add:dict = {}, data_post:dict = {}, disable_std_params:bool = False) -> dict:
         """
         Realiza uma chamada com base nos args inseridos
         
@@ -78,11 +79,11 @@ class Caller():
         if disable_std_params: self.session.params = {}
         if params_add != {}: self.session.params.update(params_add)
         
-        self.std_url = self.std_url.format(add_to_url) if add_to_url != '' else self.std_url[:-2]
+        self.req_url = self.std_url.format(add_to_url) if add_to_url != '' else self.std_url[:-2]
         try:
             call = self.session.request(
                 method = method,
-                url = self.std_url,
+                url = self.req_url,
                 data = None if method.lower() not in ['post', 'put'] else json.dumps(data_post)
             )
             call.raise_for_status()
