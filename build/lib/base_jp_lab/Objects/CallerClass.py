@@ -89,6 +89,7 @@ class Caller():
             call.raise_for_status()
         except HTTPError as er1:
             print(f'Erro HTTP. Código {er1.response.status_code}')
+            return 0
         
         print(f'Chamada feita. Resposta com código {call.status_code}')
         
