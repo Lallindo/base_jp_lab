@@ -41,6 +41,9 @@ class Caller():
         self.header = eval(api[3])['header']
         self.param = eval(api[5])['params']
         self.token_name = api[7]
+
+        self.site_name = site_name
+        self.api_url = link_n8n
         
         self.session = requests.Session()
         self.session.headers = self.header
@@ -48,10 +51,10 @@ class Caller():
         
         if 'Authorization' in self.session.headers and self.session.headers['Authorization'] == 'Bearer {}':
             print('Pegando chave de API:')
-            self.session.headers.update({'Authorization': f'Bearer {api_token_n8n(link_n8n, site_name, owner)[self.token_name]}'})
+            self.session.headers.update({'Authorization': f'Bearer {api_token_n8n(self.api_url, self.site_name, owner)[self.token_name]}'})
         elif 'x-amz-access-token' in self.session.headers:
             print('Pegando chave de API:')
-            self.session.headers.update({'x-amz-access-token': api_token_n8n(link_n8n,site_name, owner)[self.token_name]})     
+            self.session.headers.update({'x-amz-access-token': api_token_n8n(self.api_url, self.site_name, owner)[self.token_name]})     
 
         retry_strategy = Retry(
             total=5, # Quantidade de tentativas máximas
@@ -66,6 +69,23 @@ class Caller():
         print(f'URL: {self.std_url}')
         print(f'Headers: {self.header}')
         print(f'Parâmetros: {self.param}')
+
+    def change_owner(self, new_owner:str):
+        """
+        Altera o dono da API que será usada
+        
+        Args
+        ----------
+            new_owner (str): Nome do novo dono.
+        """
+        
+        if 'Authorization' in self.session.headers and self.session.headers['Authorization'] == 'Bearer {}':
+            print('Alterando chave de API:')
+            self.session.headers.update({'Authorization': f'Bearer {api_token_n8n(self.api_url, self.site_name, new_owner)[self.token_name]}'})
+        elif 'x-amz-access-token' in self.session.headers:
+            print('Alterando chave de API:')
+            self.session.headers.update({'x-amz-access-token': api_token_n8n(self.api_url, self.site_name, new_owner)[self.token_name]})  
+
     
     def make_call(self, add_to_url:str = '', method:str = 'get', params_add:dict = {}, data_post:dict = {}, disable_std_params:bool = False) -> dict:
         """
