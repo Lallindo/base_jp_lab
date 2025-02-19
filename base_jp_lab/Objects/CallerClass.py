@@ -9,7 +9,7 @@ class Caller():
     """ Classe criada para realizar chamadas HTTPS e gerenciar os dados necessários para essas chamadas """
     def __init__(self, access:Access, site_name:str, link_n8n:str, owner:str = ''):
         """
-        Inicializa uma instância da classe 'Caller'
+        Inicializa uma instância da classe 'Caller'sad
         
         Args
         ----------
@@ -49,7 +49,10 @@ class Caller():
         if 'Authorization' in self.session.headers and self.session.headers['Authorization'] == 'Bearer {}':
             print('Pegando chave de API:')
             self.session.headers.update({'Authorization': f'Bearer {api_token_n8n(link_n8n, site_name, owner)[self.token_name]}'})
-                        
+        elif 'x-amz-access-token' in self.session.headers:
+            print('Pegando chave de API:')
+            self.session.headers.update({'x-amz-access-token': api_token_n8n(link_n8n,site_name, owner)[self.token_name]})     
+
         retry_strategy = Retry(
             total=5, # Quantidade de tentativas máximas
             backoff_factor=0.2, # Tempo entre será (backoff_factor) * (2 ** (tentativas_falhadas - 1)) -> Com 0.1 = 0.1, 0.2, 0.4, 0.8, 1.6
