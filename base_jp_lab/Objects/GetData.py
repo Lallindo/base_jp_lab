@@ -39,9 +39,9 @@ def api_data(access:Access, site_name:str) -> tuple:
             return access.get_api_data(3)[0]
         case 'magalu':
             return access.get_api_data(4)[0]
-        case 'shopee':
-            return None
         case 'amazon':
+            return access.get_api_data(5)[0]
+        case 'shopee':
             return None
         
 def scraping_base_url(site_name:str) -> str|None:
