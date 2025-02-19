@@ -79,7 +79,7 @@ class Caller():
             new_owner (str): Nome do novo dono.
         """
         
-        if 'Authorization' in self.session.headers and self.session.headers['Authorization'] == 'Bearer {}':
+        if 'Authorization' in self.session.headers:
             print('Alterando chave de API:')
             self.session.headers.update({'Authorization': f'Bearer {api_token_n8n(self.api_url, self.site_name, new_owner)[self.token_name]}'})
         elif 'x-amz-access-token' in self.session.headers:
