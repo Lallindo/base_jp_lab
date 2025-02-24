@@ -39,6 +39,7 @@ class Caller():
         api = api_data(self.access, self.site_name)
         self.link_n8n = link_n8n
         self.owner = owner
+        self.site_name = site_name
 
         self.std_url = api[1]
         self.req_url = ''
