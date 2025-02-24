@@ -3,11 +3,11 @@ import json
 from requests.exceptions import HTTPError, JSONDecodeError
 from requests.adapters import HTTPAdapter, Retry
 from .AccessClass import Access
-from .GetData import api_token_n8n, api_data
+from .GetData import api_token_db, api_data
 
 class Caller():
     """ Classe criada para realizar chamadas HTTPS e gerenciar os dados necessários para essas chamadas """
-    def __init__(self, access:Access, site_name:str, link_n8n:str, owner:str = ''):
+    def __init__(self, access:Access, site_name:str, link_n8n:str, owner:str = 'silvio'):
         """
         Inicializa uma instância da classe 'Caller'sad
         
@@ -35,7 +35,11 @@ class Caller():
             A inserção em 'std_url', 'header', 'param' e 'token_name' foram feitos baseados na estrutura do banco de dados `jp_bd.apis`.
         """
         
-        api = api_data(access, site_name)
+        self.access = access
+        api = api_data(self.access, self.site_name)
+        self.link_n8n = link_n8n
+        self.owner = owner
+
         self.std_url = api[1]
         self.req_url = ''
         self.header = eval(api[3])['header']
@@ -51,10 +55,10 @@ class Caller():
         
         if 'Authorization' in self.session.headers and self.session.headers['Authorization'] == 'Bearer {}':
             print('Pegando chave de API:')
-            self.session.headers.update({'Authorization': f'Bearer {api_token_n8n(self.api_url, self.site_name, owner)[self.token_name]}'})
+            self.session.headers.update({'Authorization': f'Bearer {api_token_db(self.access, self.site_name, self.owner, self.link_n8n, self.token_name)}'})
         elif 'x-amz-access-token' in self.session.headers:
             print('Pegando chave de API:')
-            self.session.headers.update({'x-amz-access-token': api_token_n8n(self.api_url, self.site_name, owner)[self.token_name]})     
+            self.session.headers.update({'x-amz-access-token': api_token_db(self.access, self.site_name, self.owner, self.link_n8n, self.token_name)})     
 
         retry_strategy = Retry(
             total=5, # Quantidade de tentativas máximas
@@ -81,10 +85,10 @@ class Caller():
         
         if 'Authorization' in self.session.headers:
             print('Alterando chave de API:')
-            self.session.headers.update({'Authorization': f'Bearer {api_token_n8n(self.api_url, self.site_name, new_owner)[self.token_name]}'})
+            self.session.headers.update({'Authorization': f'Bearer {api_token_db(self.access, self.site_name, self.owner, self.link_n8n, self.token_name)}'})
         elif 'x-amz-access-token' in self.session.headers:
             print('Alterando chave de API:')
-            self.session.headers.update({'x-amz-access-token': api_token_n8n(self.api_url, self.site_name, new_owner)[self.token_name]})  
+            self.session.headers.update({'x-amz-access-token': api_token_db(self.access, self.site_name, self.owner, self.link_n8n, self.token_name)})  
 
     
     def make_call(self, add_to_url:str = '', method:str = 'get', params_add:dict = {}, data_post:dict = {}, disable_std_params:bool = False) -> dict:
