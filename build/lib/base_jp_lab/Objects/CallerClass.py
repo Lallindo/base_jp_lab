@@ -7,7 +7,7 @@ from .GetData import api_token_db, api_data
 
 class Caller():
     """ Classe criada para realizar chamadas HTTPS e gerenciar os dados necessários para essas chamadas """
-    def __init__(self, access:Access, site_name:str, link_n8n:str, owner:str = 'silvio'):
+    def __init__(self, access:Access, site_name:str, link_n8n:str = '', owner:str = 'silvio'):
         """
         Inicializa uma instância da classe 'Caller'sad
         
