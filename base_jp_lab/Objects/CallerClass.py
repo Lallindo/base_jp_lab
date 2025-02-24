@@ -3,7 +3,7 @@ import json
 from requests.exceptions import HTTPError, JSONDecodeError
 from requests.adapters import HTTPAdapter, Retry
 from .AccessClass import Access
-from .GetData import api_token_n8n, api_data
+from .GetData import api_token_db, api_data
 
 class Caller():
     """ Classe criada para realizar chamadas HTTPS e gerenciar os dados necessários para essas chamadas """
@@ -51,10 +51,10 @@ class Caller():
         
         if 'Authorization' in self.session.headers and self.session.headers['Authorization'] == 'Bearer {}':
             print('Pegando chave de API:')
-            self.session.headers.update({'Authorization': f'Bearer {api_token_n8n(self.api_url, self.site_name, owner)[self.token_name]}'})
+            self.session.headers.update({'Authorization': f'Bearer {api_token_db(access, self.site_name, owner, link_n8n, self.token_name)}'})
         elif 'x-amz-access-token' in self.session.headers:
             print('Pegando chave de API:')
-            self.session.headers.update({'x-amz-access-token': api_token_n8n(self.api_url, self.site_name, owner)[self.token_name]})     
+            self.session.headers.update({'x-amz-access-token': api_token_db(self.api_url, self.site_name, owner)[self.token_name]})     
 
         retry_strategy = Retry(
             total=5, # Quantidade de tentativas máximas
