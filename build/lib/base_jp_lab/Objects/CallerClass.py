@@ -92,7 +92,7 @@ class Caller():
             self.session.headers.update({'x-amz-access-token': api_token_db(self.access, self.site_name, self.owner, self.link_n8n, self.token_name)})  
 
     
-    def make_call(self, add_to_url:str = '', method:str = 'get', params_add:dict = {}, data_post:dict = {}, disable_std_params:bool = False) -> dict:
+    def make_call(self, add_to_url:str = '', method:str = 'get', params_add:dict = {}, data_post:dict = {}, disable_std_params:bool = False, return_full_response:bool = False) -> dict|requests.Response:
         """
         Realiza uma chamada com base nos args inseridos
         
@@ -102,6 +102,7 @@ class Caller():
             params_add (dict): Parâmetros adicionais que devem ser adicionados à chamada.
             data_post (dict): Dados que serão enviados num POST ou PUT.
             disable_std_params (bool): Desabilita os parâmetros padrões.
+            return_full_response (bool): Retorna todos os dados da Response.
         """
         
         if disable_std_params: self.session.params = {}
@@ -121,4 +122,7 @@ class Caller():
         
         print(f'Chamada feita. Resposta com código {call.status_code}')
         
-        return call.json()
+        if return_full_response:
+            return call
+        else:
+            return call.json()
