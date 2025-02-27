@@ -20,11 +20,11 @@ class Connection():
             db (mysql.connector.connection.MySQLConnection): Conexão com o banco através de 'mysql.connector.connect()'.
             cursor (mysql.connector.cursor.MySQLCursor): Cursor usado para realizar as queries.
         """
-        self.user = user # Colocar usuário aqui
-        self.password = password # Colocar senha aqui
-        self.host = host # Colocar host aqui
-        self.port = port # Colocar port aqui
-        self.name = name # Colocar nome do banco aqui
+        self.user = user
+        self.password = password 
+        self.host = host 
+        self.port = port 
+        self.name = name 
         self.db = None
         self.cursor = None
         

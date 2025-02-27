@@ -1,5 +1,5 @@
 import requests
-from mysql.connector import Error
+from mysql.connector.errors import Error, DatabaseError, ProgrammingError
 from .AccessClass import Access 
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -8,15 +8,11 @@ from cryptography.fernet import Fernet
 
 def api_token_db(access: Access, site_name: str, owner:str = 'silvio', link_n8n: str = '', token_name:str = '') -> tuple:
     print('Buscando chave de API no DB...')
-    try:
-        data_api = access.custom_select_query(f'SELECT access_token from apis_valores WHERE loja = "{site_name} - {owner}"')
+    data_api = access.custom_select_query(f'SELECT access_token from apis_valores WHERE loja = "{site_name} - {owner}"')
+    if len(data_api[0]) == 0:
         return data_api[0][0]
-    except Error:
-        print('Erro ao buscar no DB, buscando pelo N8N...')
-        if link_n8n != '' and token_name != '':
-            return api_token_n8n(link_n8n, site_name, owner, token_name)
-        else:
-            print('Erro buscando a chave de API')
+    else:
+        return api_token_n8n(link_n8n, site_name, owner, token_name)
 
 def api_token_n8n(link_n8n:str, site_name:str, owner:str = '', token_name:str = '') -> dict:
     """
