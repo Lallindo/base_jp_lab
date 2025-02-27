@@ -1,9 +1,9 @@
 Metadata-Version: 2.1
 Name: base_jp_lab
-Version: 0.0.6
+Version: 0.0.7
 Summary: Pacote com objetos que serão utilizados para criação de sistemas automatizados dentro da empresa JauPesca
-Author: Bruno Lallo
-Author-email: brunolallo8@gmail.com
+Author: Bruno Lallo, Marcelo de Paula
+Author-email: brunolallo8@gmail.com, marcelodepaula.dev@gmai.com
 License: MIT
 Requires-Dist: requests==2.32.3
 Requires-Dist: selenium==4.24.0

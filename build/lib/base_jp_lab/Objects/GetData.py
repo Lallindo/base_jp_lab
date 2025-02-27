@@ -65,7 +65,7 @@ def scraping_base_url(site_name:str) -> str|None:
     ----------
         site_name (str): Nome do site que será acessado.
     """
-    if site_name in ['pedidook', 'tiny', 'mercadolivre', 'amazon']:
+    if site_name in ['pedidook', 'tiny', 'mercadolivre', 'amazon', 'shopee']:
         return None
     elif site_name == 'magalu':
         return 'https://magazineluiza.com.br/{}'
