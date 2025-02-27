@@ -33,12 +33,7 @@ class Access():
         ----------
             id_api (int): Id da respectiva API no banco de dados
         """
-        self.con.start_con()
-        query = f"SELECT * FROM apis WHERE id_api = {id_api}"
-        self.con.cursor.execute(query)
-        return_val = self.con.cursor.fetchall()
-        self.con.close_con()
-        return return_val
+        return self.custom_select_query(f"SELECT * FROM apis WHERE id_api = {id_api}")
         
     def custom_select_query(self, query:str) -> list|dict:
         """
