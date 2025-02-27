@@ -86,10 +86,10 @@ class Caller():
         
         if 'Authorization' in self.session.headers:
             print('Alterando chave de API:')
-            self.session.headers.update({'Authorization': f'Bearer {api_token_db(self.access, self.site_name, self.owner, self.link_n8n, self.token_name)}'})
+            self.session.headers.update({'Authorization': f'Bearer {api_token_db(self.access, self.site_name, new_owner, self.link_n8n, self.token_name)}'})
         elif 'x-amz-access-token' in self.session.headers:
             print('Alterando chave de API:')
-            self.session.headers.update({'x-amz-access-token': api_token_db(self.access, self.site_name, self.owner, self.link_n8n, self.token_name)})  
+            self.session.headers.update({'x-amz-access-token': api_token_db(self.access, self.site_name, new_owner, self.link_n8n, self.token_name)})  
 
     
     def make_call(self, add_to_url:str = '', method:str = 'get', params_add:dict = {}, data_post:dict = {}, disable_std_params:bool = False, return_full_response:bool = False) -> dict|requests.Response:
