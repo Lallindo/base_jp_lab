@@ -6,13 +6,19 @@ from oauth2client.service_account import ServiceAccountCredentials
 import json
 from cryptography.fernet import Fernet
 
+class APITokenNotFound(Exception):
+    def __init__(self):
+        exit('Chave de API não foi encontrada')
+
 def api_token_db(access: Access, site_name: str, owner:str = 'silvio', link_n8n: str = '', token_name:str = '') -> tuple:
     print('Buscando chave de API no DB...')
     data_api = access.custom_select_query(f'SELECT access_token from apis_valores WHERE loja = "{site_name} - {owner}"')
-    if len(data_api[0]) == 0:
+    if len(data_api[0]) > 0:
         return data_api[0][0]
-    else:
+    elif link_n8n != '':
         return api_token_n8n(link_n8n, site_name, owner, token_name)
+    else:
+        raise APITokenNotFound()
 
 def api_token_n8n(link_n8n:str, site_name:str, owner:str = '', token_name:str = '') -> dict:
     """
