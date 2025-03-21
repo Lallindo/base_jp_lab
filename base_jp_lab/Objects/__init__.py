@@ -3,3 +3,4 @@ from .ConnectionClass import Connection
 from .AccessClass import Access
 from .CallerClass import Caller
 from .ScraperClass import Scraper
+from .AsyncCallerClass import AsyncCaller
