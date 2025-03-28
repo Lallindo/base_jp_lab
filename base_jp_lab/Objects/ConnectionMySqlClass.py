@@ -1,6 +1,6 @@
 import mysql.connector
 
-class Connection():
+class ConnectionMySql():
     """ Classe criada para controlar a conexão com o banco de dados """
     
     def __init__(self, user:str, password:str, host:str, port:str, name:str) -> None:

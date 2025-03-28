@@ -1,9 +1,10 @@
-from .ConnectionClass import Connection
+from .ConnectionMySqlClass import ConnectionMySql
+from .ConnectionPGClass import ConnectionPG
 
 class Access():
     """ Classe criada para acessar o banco de dados de modo centralizado """
     
-    def __init__(self, user:str, password:str, host:str, port:str, name:str):
+    def __init__(self, user:str, password:str, host:str, port:str, name:str, is_mysql:bool = True):
         """
         Inicializa uma instância da classe 'Access' instânciando um objeto 'Connection'
         
@@ -23,7 +24,11 @@ class Access():
         ----------
             Todos os métodos devem iniciar com o método "self.con.start_con()" e terminar com o método "self.con.close_con()"
         """
-        self.con = Connection(user, password, host, port, name)
+        self.is_mysql = is_mysql
+        if is_mysql:
+            self.con = ConnectionMySql(user, password, host, port, name)
+        else:
+            self.con = ConnectionPG(user, password, host, port, name)
         
     def get_api_data(self, id_api:int) -> list:
         """
@@ -61,6 +66,13 @@ class Access():
         self.con.start_con()
         self.con.cursor.executemany(query, data)
         self.con.db.commit()
+        #if self.is_mysql:
+        #    self.con.cursor.executemany(query, data)
+        #    self.con.db.commit()
+        #else:
+        #    args = ','.join(self.con.cursor.mogrify("(%s, %s, %s)", i).decode('utf-8') for i in data)
+        #    self.con.cursor.execute(query + args)
+        #    self.con.db.commit()
         self.con.close_con()
         print('Dados inseridos/alterados')
         return 

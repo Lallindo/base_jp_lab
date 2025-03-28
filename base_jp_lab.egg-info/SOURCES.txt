@@ -9,7 +9,8 @@ base_jp_lab.egg-info/top_level.txt
 base_jp_lab/Objects/AccessClass.py
 base_jp_lab/Objects/AsyncCallerClass.py
 base_jp_lab/Objects/CallerClass.py
-base_jp_lab/Objects/ConnectionClass.py
+base_jp_lab/Objects/ConnectionMySqlClass.py
+base_jp_lab/Objects/ConnectionPGClass.py
 base_jp_lab/Objects/GetData.py
 base_jp_lab/Objects/ScraperClass.py
 base_jp_lab/Objects/__init__.py
