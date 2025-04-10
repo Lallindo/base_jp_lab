@@ -6,3 +6,4 @@ pandas==2.2.3
 mysql-connector==2.2.9
 cryptography==43.0.3
 grequests==0.7.0
+psycopg2==2.0.10

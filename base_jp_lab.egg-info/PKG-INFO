@@ -13,3 +13,4 @@ Requires-Dist: pandas==2.2.3
 Requires-Dist: mysql-connector==2.2.9
 Requires-Dist: cryptography==43.0.3
 Requires-Dist: grequests==0.7.0
+Requires-Dist: psycopg2==2.0.10
