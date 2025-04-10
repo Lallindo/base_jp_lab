@@ -4,7 +4,7 @@ description = 'Pacote com objetos que serão utilizados para criação de sistem
 
 setup(
     name='base_jp_lab',
-    version='0.1.1',
+    version='0.1.2',
     description=description,
     author='Bruno Lallo, Marcelo de Paula',
     author_email='brunolallo8@gmail.com, marcelodepaula.dev@gmai.com',

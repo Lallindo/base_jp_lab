@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: base_jp_lab
-Version: 0.1.1
+Version: 0.1.2
 Summary: Pacote com objetos que serão utilizados para criação de sistemas automatizados dentro da empresa JauPesca
 Author: Bruno Lallo, Marcelo de Paula
 Author-email: brunolallo8@gmail.com, marcelodepaula.dev@gmai.com
@@ -13,4 +13,4 @@ Requires-Dist: pandas==2.2.3
 Requires-Dist: mysql-connector==2.2.9
 Requires-Dist: cryptography==43.0.3
 Requires-Dist: grequests==0.7.0
-Requires-Dist: psycopg2==2.0.10
+Requires-Dist: psycopg2==2.9.10
