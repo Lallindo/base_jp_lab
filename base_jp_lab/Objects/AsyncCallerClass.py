@@ -4,6 +4,7 @@ from math import ceil
 from typing import Union, List, Optional
 from .AccessClass import Access
 from .GetData import api_data, api_token_db
+from itertools import batched
 
 class AsyncCaller:
     """Classe para realizar chamadas HTTPS de modo assíncrono usando httpx"""
@@ -51,13 +52,7 @@ class AsyncCaller:
         if isinstance(chunk_size, float):
             chunk_size = round(chunk_size)
 
-        for i in range(ceil(len(self.urls) / chunk_size)):
-            self.chunked_urls.append(
-                self.urls[
-                    len(self.chunked_urls)*chunk_size:
-                    (len(self.chunked_urls)+1)*chunk_size
-                ]
-            )
+        self.chunked_urls = batched(self.urls, chunk_size)
 
     async def _fetch_url(self, client: httpx.AsyncClient, url: str, return_full_response: bool):
         """Helper method to fetch a single URL"""
@@ -87,6 +82,8 @@ class AsyncCaller:
         Returns:
             List of responses or None if no URLs
         """
+        self.chunked_urls = []
+
         if not self.urls:
             print("Nenhuma URL adicionada")
             return None
