@@ -75,15 +75,18 @@ class Caller():
         print(f'Headers: {self.header}')
         print(f'Parâmetros: {self.param}')
 
-    def change_owner(self, new_owner:str):
+    def change_api_key(self, new_owner:str|None):
         """
-        Altera o dono da API que será usada
+        Altera a chave da API que será usada, pode ser usada para resetar uma chave expirada
         
         Args
         ----------
             new_owner (str): Nome do novo dono.
         """
         
+        if new_owner is None:
+            new_owner = self.owner
+
         if 'Authorization' in self.session.headers:
             print('Alterando chave de API:')
             self.session.headers.update({'Authorization': f'Bearer {api_token_db(self.access, self.site_name, new_owner, self.link_n8n, self.token_name)}'})
@@ -117,6 +120,8 @@ class Caller():
             )
             call.raise_for_status()
         except HTTPError as er1:
+            if er1.response.status_code == 403:
+                self.change_api_key()
             print(f'Erro HTTP. Código {er1.response.status_code}')
             return call
         
