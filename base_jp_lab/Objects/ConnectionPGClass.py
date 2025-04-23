@@ -1,26 +1,23 @@
 import psycopg2
+from psycopg2 import pool
+from typing import Optional
 
 class ConnectionPG:
-    """ Classe criada para controlar a conexão com o banco de dados Postgree """
-
-    def __init__(self, user:str = '', password:str = '', host:str = '', port:str = '', name:str = '') -> None:
+    """Classe para controlar a conexão com PostgreSQL com connection pooling"""
+    
+    _connection_pool = None
+    
+    def __init__(self, user: str = '', password: str = '', host: str = '', port: str = '', name: str = ''):
         """
-        Inicializa uma instância da classe 'ConnectionPG'
+        Inicializa a classe com configurações de conexão
         
-        Args
-        ----------
-            user (str): Nome do usuário para a conexão com o banco de dados.
-            password (str): Senha usada para a conexão com o banco de dados. 
-            host (str): Host do banco de dados, pode ser alterado para 'localhost' para acessar um banco local. 
-            port (str): Porta usada para a conexão com o banco.
-            name (str): Nome do banco de dados. 
-
-        Vars
-        ----------
-            db (mysql.connector.connection.MySQLConnection): Conexão com o banco através de 'mysql.connector.connect()'.
-            cursor (mysql.connector.cursor.MySQLCursor): Cursor usado para realizar as queries.
+        Args:
+            user (str): Nome do usuário
+            password (str): Senha do banco
+            host (str): Host do banco
+            port (str): Porta do banco
+            name (str): Nome do banco
         """
-
         self.user = user
         self.password = password
         self.host = host
@@ -28,17 +25,47 @@ class ConnectionPG:
         self.database = name
         self.db = None
         self.cursor = None
-
+        
+        # Initialize connection pool if not already done
+        if ConnectionPG._connection_pool is None:
+            ConnectionPG._initialize_pool(user, password, host, port, name)
+    
+    @classmethod
+    def _initialize_pool(cls, user, password, host, port, name):
+        """Initialize the connection pool"""
+        try:
+            cls._connection_pool = psycopg2.pool.SimpleConnectionPool(
+                minconn=1,
+                maxconn=5,
+                user=user,
+                password=password,
+                host=host,
+                port=port,
+                database=name
+            )
+        except Exception as e:
+            print(f"Error creating connection pool: {e}")
+            raise
+    
     def start_con(self):
-        self.db = psycopg2.connect(
-            host=self.host,
-            user=self.user,
-            password=self.password,
-            database=self.database,
-            port=self.port
-        )
-        self.cursor = self.db.cursor()
-
+        """Obtém uma conexão do pool"""
+        try:
+            if self.db is None or self.db.closed:
+                self.db = self._connection_pool.getconn()
+                self.cursor = self.db.cursor()
+        except Exception as e:
+            print(f"Error getting connection from pool: {e}")
+            raise
+    
     def close_con(self):
-        self.cursor.close()
-        self.db.close()
+        """Fecha a conexão e retorna ao pool"""
+        try:
+            if self.cursor:
+                self.cursor.close()
+            if self.db and not self.db.closed:
+                self._connection_pool.putconn(self.db)
+            # Reset references
+            self.cursor = None
+            self.db = None
+        except Exception as e:
+            print(f"Error closing connection: {e}")
